@@ -126,6 +126,13 @@ The command line script prints a QR code to the terminal::
 
     $ segno "Comfortably Numb"
 
+Alternatively, using pipe:
+
+    $ echo "Comfortably Numb" | segno
+
+Or from file:
+
+    $ cat qrinfo.txt | segno
 
 To serialize a QR code, use the "output" argument::
 
