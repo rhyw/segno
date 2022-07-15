@@ -182,7 +182,7 @@ def make_parser():
     parser.add_mutually_exclusive_group().add_argument('--ver', '-V', help="Shows Segno's version",
                                                        action='version',
                                                        version='Segno {0}'.format(segno.__version__))
-    parser.add_argument('content', nargs='+', help='The content to encode')
+    parser.add_argument('content', nargs='?', help='The content to encode')
     return parser
 
 
@@ -191,10 +191,15 @@ def parse(args):
     Parses the arguments and returns the result.
     """
     parser = make_parser()
-    if not len(args):
+    if not len(args) and sys.stdin.isatty():
         parser.print_help()
         sys.exit(1)
     parsed_args = parser.parse_args(args)
+    if not sys.stdin.isatty():
+        setattr(parsed_args, 'content', sys.stdin.read())
+    elif parsed_args.content is None:
+        parser.print_help()
+        sys.exit(1)
     if parsed_args.error == '-':
         parsed_args.error = None
     # 'micro' is False by default. If version is set to a Micro QR Code version,
